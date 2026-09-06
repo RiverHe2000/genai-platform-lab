@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from tests.conftest import final, tool
 
 from agentguard.agent import build_agent
 from agentguard.api import create_app
 from agentguard.cli import main
 from agentguard.config import Settings
 from agentguard.llm import FakeChatModel
+from tests.conftest import final, tool
 
 ROOT = Path(__file__).resolve().parents[1]
 

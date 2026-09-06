@@ -60,7 +60,7 @@ jobs:
         run: |
           llmgate eval --config deploy/gateway.fake.yaml --model fake-baseline --suite evalsets/finance_qa.jsonl --out /tmp/base
           llmgate eval --config deploy/gateway.fake.yaml --model fake-candidate --suite evalsets/finance_qa.jsonl --out /tmp/cand
-          llmgate promote --candidate /tmp/cand/report.json --baseline /tmp/base/report.json --policy deploy/promotion_policy.yaml --out /tmp/promotion
+          llmgate promote --candidate /tmp/cand/report.json --baseline /tmp/base/report.json --policy deploy/promotion_policy.ci.yaml --out /tmp/promotion
 
       - name: Docker build (gateway image)
         run: docker build -t llmgate:ci -f deploy/Dockerfile .

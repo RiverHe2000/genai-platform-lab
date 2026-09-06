@@ -27,8 +27,8 @@ serve = ["uvicorn[standard]>=0.30"]
 dev = [
   "pytest>=8.3",
   "pytest-cov>=5.0",
-  "ruff>=0.6",
-  "mypy>=1.11",
+  "ruff==0.16.6",       # pinned: a lint gate must not drift with the tool
+  "mypy==2.3.1",
   "types-PyYAML",
   "torch>=2.4",
   "transformers>=4.45",
