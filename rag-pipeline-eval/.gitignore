@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Generated indexes and evaluation runs (regenerable: `ragpipe ingest`, `ragpipe eval`).
+# The committed corpus/ and evalsets/ are inputs, not outputs, and stay tracked.
+index/
+runs/
+*.sqlite
+*.bin
+*.pt
+*.safetensors
+
+# Local logs and IDE files
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

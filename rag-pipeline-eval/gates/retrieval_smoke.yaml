@@ -1,0 +1,9 @@
+# Deterministic gate run in CI with the hashing embedder and the FakeLLM: it protects the
+# retrieval stack (chunking, BM25, fusion) against regressions without any model download.
+gates:
+  - metric: retrieval/hit_rate@5
+    min: 0.85
+  - metric: retrieval/recall@5
+    min: 0.80
+  - metric: retrieval/mrr
+    min: 0.70

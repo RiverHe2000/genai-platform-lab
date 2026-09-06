@@ -1,0 +1,67 @@
+# vLLM serving Deployment: one GPU per replica, model cache on a PVC, readiness on /health.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-prod
+  labels: {app: vllm-prod}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}   # a GPU cannot host two replicas of a 7B model at once
+  selector:
+    matchLabels: {app: vllm-prod}
+  template:
+    metadata:
+      labels: {app: vllm-prod}
+    spec:
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:latest
+          args:
+            - --model=Qwen/Qwen2.5-7B-Instruct
+            - --served-model-name=qwen2.5-7b-instruct
+            - --dtype=bfloat16
+            - --max-model-len=8192
+            - --gpu-memory-utilization=0.90
+            - --enable-prefix-caching
+            - --max-num-seqs=128
+            - --port=8000
+          env:
+            - name: VLLM_API_KEY
+              valueFrom: {secretKeyRef: {name: llmgate-secrets, key: vllm-prod-api-key}}
+            - name: HUGGING_FACE_HUB_TOKEN
+              valueFrom: {secretKeyRef: {name: llmgate-secrets, key: hf-token, optional: true}}
+          ports: [{containerPort: 8000, name: http}]
+          resources:
+            limits: {nvidia.com/gpu: 1, memory: "32Gi"}
+            requests: {cpu: "4", memory: "16Gi"}
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            initialDelaySeconds: 300
+            periodSeconds: 30
+          volumeMounts:
+            - {name: hf-cache, mountPath: /root/.cache/huggingface}
+      volumes:
+        - name: hf-cache
+          persistentVolumeClaim: {claimName: vllm-hf-cache}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-prod
+spec:
+  selector: {app: vllm-prod}
+  ports: [{port: 8000, targetPort: http, name: http}]
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vllm-hf-cache
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests: {storage: 100Gi}

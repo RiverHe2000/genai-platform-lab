@@ -1,0 +1,9 @@
+# CI dry run with fake backends: proves the wiring, not model quality.
+min_mean_score: 0.0
+non_inferiority_margin: 0.05
+require_improvement: false
+max_p95_latency_ms: 5000
+max_error_rate: 0.05
+min_cases: 10
+n_boot: 500
+seed: 0

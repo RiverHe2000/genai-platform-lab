@@ -1,0 +1,89 @@
+# Gateway Deployment + Service + HPA. The vLLM Deployment is in vllm.yaml.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llmgate-config
+data:
+  gateway.yaml: |
+    backends:
+      - name: vllm-prod
+        kind: vllm
+        base_url: http://vllm-prod:8000/v1
+        model: qwen2.5-7b-instruct
+        api_key_env: VLLM_PROD_API_KEY
+        timeout_s: 90
+        max_concurrency: 64
+        queue_timeout_s: 5
+    routing:
+      name: gateway-default
+      strategy: primary_fallback
+      primary: vllm-prod
+      fallbacks: []
+    resilience: {max_retries: 2, backoff_s: 0.25, breaker_failure_threshold: 5, breaker_recovery_s: 30}
+    ratelimit: {requests_per_minute: 1200, burst: 120, daily_token_budget: 0}
+    guardrails: {redact_input_pii: true, redact_output_pii: true, injection_threshold: 0.7, max_prompt_chars: 48000, max_tokens_cap: 2048}
+    auth: {required: true, api_keys: {}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llmgate
+  labels: {app: llmgate}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: llmgate}
+  template:
+    metadata:
+      labels: {app: llmgate}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: gateway
+          image: ghcr.io/example/llmgate:0.1.0
+          args: ["llmgate", "serve", "--config", "/config/gateway.yaml", "--host", "0.0.0.0", "--port", "8080"]
+          ports: [{containerPort: 8080, name: http}]
+          env:
+            - name: VLLM_PROD_API_KEY
+              valueFrom: {secretKeyRef: {name: llmgate-secrets, key: vllm-prod-api-key}}
+          volumeMounts:
+            - {name: config, mountPath: /config, readOnly: true}
+          resources:
+            requests: {cpu: "250m", memory: "256Mi"}
+            limits: {cpu: "1", memory: "512Mi"}
+          readinessProbe:
+            httpGet: {path: /ready, port: http}
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet: {path: /health, port: http}
+            periodSeconds: 20
+      volumes:
+        - name: config
+          configMap: {name: llmgate-config}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llmgate
+spec:
+  selector: {app: llmgate}
+  ports: [{port: 80, targetPort: http, name: http}]
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: llmgate
+spec:
+  scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: llmgate}
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource: {name: cpu, target: {type: Utilization, averageUtilization: 70}}

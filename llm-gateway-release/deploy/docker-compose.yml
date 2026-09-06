@@ -1,0 +1,51 @@
+# Gateway + vLLM on a Linux host with the NVIDIA container runtime.
+#   VLLM_MODEL=Qwen/Qwen2.5-7B-Instruct docker compose -f deploy/docker-compose.yml up
+services:
+  vllm-prod:
+    image: vllm/vllm-openai:latest
+    command: >
+      --model ${VLLM_MODEL:-Qwen/Qwen2.5-1.5B-Instruct}
+      --served-model-name qwen2.5-7b-instruct
+      --dtype bfloat16
+      --max-model-len 8192
+      --gpu-memory-utilization 0.90
+      --enable-prefix-caching
+      --max-num-seqs 128
+      --api-key ${VLLM_PROD_API_KEY:-vllm-dev-key}
+      --port 8000
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 120s
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    depends_on:
+      vllm-prod:
+        condition: service_healthy
+    environment:
+      LLMGATE_CONFIG_PATH: /app/deploy/gateway.compose.yaml
+      VLLM_PROD_API_KEY: ${VLLM_PROD_API_KEY:-vllm-dev-key}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - ./gateway.compose.yaml:/app/deploy/gateway.compose.yaml:ro
+    ports:
+      - "8080:8080"
+
+volumes:
+  hf-cache:

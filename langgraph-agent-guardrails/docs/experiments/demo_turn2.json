@@ -1,0 +1,34 @@
+{
+  "thread_id": "demo",
+  "turn": 1,
+  "status": "ok",
+  "answer": "Loan L00042 has been flagged for review as it is 45 days past due.",
+  "steps": 1,
+  "tool_records": [
+    {
+      "step": 1,
+      "tool": "flag_for_review",
+      "args": {
+        "loan_id": "L00042",
+        "reason": "45 days past due"
+      },
+      "ok": true,
+      "output": "loan L00042 added to the review queue (ticket 1, approved by staff:r.reviewer)",
+      "risk": "high",
+      "approved": true,
+      "latency_s": 0.011096599977463484
+    }
+  ],
+  "guardrail_events": [
+    {
+      "rail": "human_approval",
+      "stage": "tool_args",
+      "action": "allow",
+      "score": 0.0,
+      "detail": "approved by staff:r.reviewer"
+    }
+  ],
+  "pending_action": null,
+  "latency_s": 10.336373700003605,
+  "model": "hf[Qwen/Qwen2.5-1.5B-Instruct]"
+}

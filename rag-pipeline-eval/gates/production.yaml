@@ -1,0 +1,17 @@
+# Release gate for a grounded assistant (thresholds mirror the GenAI governance standard in
+# the corpus). `use_ci: true` tests the conservative bound of the bootstrap interval.
+gates:
+  - metric: faithfulness
+    min: 0.85
+    use_ci: true
+    min_n: 20
+  - metric: answer_relevancy
+    min: 0.70
+  - metric: context_recall
+    min: 0.80
+  - metric: retrieval/recall@5
+    min: 0.85
+  - metric: false_abstention
+    max: 0.10
+  - metric: correct_abstention
+    min: 0.80

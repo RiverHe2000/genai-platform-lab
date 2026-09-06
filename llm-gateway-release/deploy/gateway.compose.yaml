@@ -1,0 +1,37 @@
+# Used by docker-compose.yml: one vLLM primary, no fallback, open auth for local use.
+backends:
+  - name: vllm-prod
+    kind: vllm
+    base_url: http://vllm-prod:8000/v1
+    model: qwen2.5-7b-instruct
+    api_key_env: VLLM_PROD_API_KEY
+    timeout_s: 120
+    max_concurrency: 64
+    queue_timeout_s: 5
+
+routing:
+  name: gateway-default
+  strategy: primary_fallback
+  primary: vllm-prod
+  fallbacks: []
+
+resilience:
+  max_retries: 2
+  backoff_s: 0.25
+  breaker_failure_threshold: 5
+  breaker_recovery_s: 30
+
+ratelimit:
+  requests_per_minute: 1200
+  burst: 120
+
+guardrails:
+  redact_input_pii: true
+  redact_output_pii: true
+  injection_threshold: 0.7
+  max_prompt_chars: 48000
+  max_tokens_cap: 2048
+
+auth:
+  required: false
+  api_keys: {}

@@ -1,0 +1,9 @@
+# Release gate for a model change behind the gateway.
+min_mean_score: 0.60            # absolute floor on the evaluation suite
+non_inferiority_margin: 0.05    # candidate may not be worse than baseline by more than 5 points
+require_improvement: false      # set true when the change is *meant* to raise quality
+max_p95_latency_ms: 4000        # SLO on the evaluation path (in-process HF on one GPU)
+max_error_rate: 0.02
+min_cases: 20
+n_boot: 2000
+seed: 0

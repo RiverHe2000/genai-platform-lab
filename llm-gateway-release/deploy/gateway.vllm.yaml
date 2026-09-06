@@ -1,0 +1,61 @@
+# Production-shaped topology: a vLLM deployment as primary with shadow traffic to a second
+# vLLM (the candidate under test) and an OpenAI-compatible fallback. Secrets come from the
+# environment variables named here; client keys are SHA-256 hashes.
+backends:
+  - name: vllm-prod
+    kind: vllm
+    base_url: http://vllm-prod:8000/v1
+    model: qwen2.5-7b-instruct          # --served-model-name on the vLLM side
+    api_key_env: VLLM_PROD_API_KEY
+    timeout_s: 90
+    max_concurrency: 64
+    queue_timeout_s: 5
+  - name: vllm-candidate
+    kind: vllm
+    base_url: http://vllm-candidate:8000/v1
+    model: qwen2.5-7b-instruct-awq
+    api_key_env: VLLM_CANDIDATE_API_KEY
+    timeout_s: 90
+    max_concurrency: 32
+  - name: openai-fallback
+    kind: openai
+    base_url: https://api.openai.com/v1
+    model: gpt-4o-mini
+    api_key_env: OPENAI_API_KEY
+    timeout_s: 60
+    max_concurrency: 16
+
+routing:
+  name: gateway-default
+  strategy: shadow
+  primary: vllm-prod
+  fallbacks: [openai-fallback]
+  shadow: vllm-candidate
+
+resilience:
+  max_retries: 2
+  backoff_s: 0.25
+  breaker_failure_threshold: 5
+  breaker_recovery_s: 30
+
+ratelimit:
+  requests_per_minute: 1200
+  burst: 120
+  daily_token_budget: 5000000
+
+guardrails:
+  redact_input_pii: true
+  redact_output_pii: true
+  block_output_pii: false
+  injection_threshold: 0.7
+  max_prompt_chars: 48000
+  max_tokens_cap: 2048
+  blocked_terms: []
+  enforce_json_schema: true
+  json_repair_retries: 1
+
+auth:
+  required: true
+  api_keys:
+    # sha256("dev-key-please-rotate") -> principal "dev"
+    3b6b3a2f5c0f2d0b4c7d3a5a0f7c2c0f8f8b1d7e6d3c2a1b0f9e8d7c6b5a4f3e: dev

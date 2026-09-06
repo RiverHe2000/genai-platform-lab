@@ -1,0 +1,10 @@
+# thread demo
+[2026-09-05T11:55:16.113+00:00] turn 1 status=awaiting_approval steps=1 latency=10.86s
+  user: Flag loan L00042 for watchlist review because it is 45 days past due.
+  answer: None
+[2026-09-05T11:55:17.750+00:00] approval decision approved=True by staff:r.reviewer note='45 dpd confirmed in the loan book'
+[2026-09-05T11:55:28.087+00:00] turn 1 status=ok steps=1 latency=10.34s
+  user: Flag loan L00042 for watchlist review because it is 45 days past due.
+  tool flag_for_review({"loan_id": "L00042", "reason": "45 days past due"}) ok=True approved=True -> 'loan L00042 added to the review queue (ticket 1, approved by staff:r.reviewer)'
+  rail human_approval@tool_args -> allow (score=0.0) approved by staff:r.reviewer
+  answer: Loan L00042 has been flagged for review as it is 45 days past due.

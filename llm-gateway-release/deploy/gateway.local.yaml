@@ -1,0 +1,44 @@
+# Two in-process Hugging Face models on one GPU: the incumbent (0.5B) as primary and the
+# candidate (1.5B) as a 20 % canary. This is the topology behind docs/RESULTS.md.
+backends:
+  - name: qwen05
+    kind: hf
+    model: Qwen/Qwen2.5-0.5B-Instruct
+    max_concurrency: 4
+    queue_timeout_s: 30
+  - name: qwen15
+    kind: hf
+    model: Qwen/Qwen2.5-1.5B-Instruct
+    max_concurrency: 4
+    queue_timeout_s: 30
+
+routing:
+  name: gateway-default
+  strategy: canary
+  primary: qwen05
+  fallbacks: []
+  canary: qwen15
+  canary_percent: 20
+
+resilience:
+  max_retries: 0
+  breaker_failure_threshold: 3
+  breaker_recovery_s: 30
+
+ratelimit:
+  requests_per_minute: 600
+  burst: 60
+  daily_token_budget: 0
+
+guardrails:
+  redact_input_pii: true
+  redact_output_pii: true
+  injection_threshold: 0.7
+  max_prompt_chars: 16000
+  max_tokens_cap: 512
+  enforce_json_schema: true
+  json_repair_retries: 1
+
+auth:
+  required: false
+  api_keys: {}

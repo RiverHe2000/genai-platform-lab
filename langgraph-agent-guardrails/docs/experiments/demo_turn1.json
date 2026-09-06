@@ -1,0 +1,18 @@
+{
+  "thread_id": "demo",
+  "turn": 1,
+  "status": "awaiting_approval",
+  "answer": null,
+  "steps": 1,
+  "tool_records": [],
+  "guardrail_events": [],
+  "pending_action": {
+    "tool": "flag_for_review",
+    "args": {
+      "loan_id": "L00042",
+      "reason": "45 days past due"
+    }
+  },
+  "latency_s": 10.855641299975105,
+  "model": "hf[Qwen/Qwen2.5-1.5B-Instruct]"
+}

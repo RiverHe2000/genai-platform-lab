@@ -1,0 +1,73 @@
+name: CI · llm-gateway-release
+
+on:
+  push:
+    branches: [main]
+    paths: ["llm-gateway-release/**", ".github/workflows/llm-gateway-release-ci.yml"]
+  pull_request:
+    paths: ["llm-gateway-release/**", ".github/workflows/llm-gateway-release-ci.yml"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: llm-gateway-release
+
+jobs:
+  quality:
+    name: py${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    env:
+      HF_HUB_OFFLINE: "1"          # tests must never download models
+      TRANSFORMERS_OFFLINE: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: llm-gateway-release/pyproject.toml
+
+      - name: Install CPU-only PyTorch
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install project (dev + serve extras)
+        run: pip install -e ".[dev,serve]"
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type-check (mypy --strict)
+        run: mypy
+
+      - name: Test (pytest + coverage)
+        run: pytest --cov-report=xml
+
+      - name: Promotion gate dry run (fake backends, deterministic)
+        # Exercises the whole release path without a model: evaluate two fake backends
+        # through the gateway, then apply the promotion policy. Exit code is the decision.
+        run: |
+          llmgate eval --config deploy/gateway.fake.yaml --model fake-baseline --suite evalsets/finance_qa.jsonl --out /tmp/base
+          llmgate eval --config deploy/gateway.fake.yaml --model fake-candidate --suite evalsets/finance_qa.jsonl --out /tmp/cand
+          llmgate promote --candidate /tmp/cand/report.json --baseline /tmp/base/report.json --policy deploy/promotion_policy.yaml --out /tmp/promotion
+
+      - name: Docker build (gateway image)
+        run: docker build -t llmgate:ci -f deploy/Dockerfile .
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python-version }}
+          path: llm-gateway-release/coverage.xml
+          if-no-files-found: ignore

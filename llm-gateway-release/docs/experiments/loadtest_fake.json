@@ -1,0 +1,68 @@
+[
+  {
+    "created_at": "2026-09-05T11:41:15+00:00",
+    "target": "in-process:gateway.fake.yaml",
+    "model": "fake-baseline",
+    "concurrency": 1,
+    "requests": 300,
+    "stream": false,
+    "wall_s": 0.26985310000600293,
+    "n_ok": 300,
+    "n_error": 0,
+    "p50_ms": 0.7629499887116253,
+    "p95_ms": 1.2731150316540152,
+    "p99_ms": 1.4957859774585809,
+    "mean_ms": 0.8868606669905906,
+    "ttft_p50_ms": null,
+    "ttft_p95_ms": null,
+    "throughput_rps": 1111.7159669217306,
+    "tokens_per_s": 10005.443702295575,
+    "status_counts": {
+      "200": 300
+    }
+  },
+  {
+    "created_at": "2026-09-05T11:41:15+00:00",
+    "target": "in-process:gateway.fake.yaml",
+    "model": "fake-baseline",
+    "concurrency": 8,
+    "requests": 300,
+    "stream": false,
+    "wall_s": 0.21002719999523833,
+    "n_ok": 300,
+    "n_error": 0,
+    "p50_ms": 4.949750000378117,
+    "p95_ms": 7.901185032096691,
+    "p99_ms": 17.53943702497054,
+    "mean_ms": 5.545368333114311,
+    "ttft_p50_ms": null,
+    "ttft_p95_ms": null,
+    "throughput_rps": 1428.3864185534135,
+    "tokens_per_s": 12855.477766980723,
+    "status_counts": {
+      "200": 300
+    }
+  },
+  {
+    "created_at": "2026-09-05T11:41:16+00:00",
+    "target": "in-process:gateway.fake.yaml",
+    "model": "fake-baseline",
+    "concurrency": 32,
+    "requests": 300,
+    "stream": false,
+    "wall_s": 0.19469079998089,
+    "n_ok": 300,
+    "n_error": 0,
+    "p50_ms": 18.49059999221936,
+    "p95_ms": 39.59795999689959,
+    "p99_ms": 40.230250033782795,
+    "mean_ms": 20.09184600203298,
+    "ttft_p50_ms": null,
+    "ttft_p95_ms": null,
+    "throughput_rps": 1540.904860576086,
+    "tokens_per_s": 13868.143745184776,
+    "status_counts": {
+      "200": 300
+    }
+  }
+]

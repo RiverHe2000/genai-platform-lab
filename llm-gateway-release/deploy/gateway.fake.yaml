@@ -1,0 +1,43 @@
+# Deterministic topology for tests, CI and gateway-overhead load tests: no model needed.
+backends:
+  - name: fake-baseline
+    kind: fake
+    model: fake-baseline-v1
+  - name: fake-candidate
+    kind: fake
+    model: fake-candidate-v2
+  - name: fake-flaky
+    kind: fake
+    model: fake-flaky
+    fake_fail_every: 3          # every third call fails with 503 -> exercises retries / fallback
+
+routing:
+  name: gateway-default
+  strategy: primary_fallback
+  primary: fake-flaky
+  fallbacks: [fake-baseline]
+
+resilience:
+  max_retries: 1
+  backoff_s: 0.01
+  breaker_failure_threshold: 5
+  breaker_recovery_s: 5
+
+ratelimit:
+  requests_per_minute: 6000000   # effectively off: this topology measures gateway overhead
+  burst: 100000
+  daily_token_budget: 0
+
+guardrails:
+  redact_input_pii: true
+  redact_output_pii: true
+  block_output_pii: false
+  injection_threshold: 0.7
+  max_prompt_chars: 32000
+  max_tokens_cap: 2048
+  enforce_json_schema: true
+  json_repair_retries: 1
+
+auth:
+  required: false
+  api_keys: {}
