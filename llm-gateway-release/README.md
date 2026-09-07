@@ -12,7 +12,7 @@ candidate against the incumbent with paired statistics before it is allowed to s
 | Quality gates | `ruff`, `mypy --strict`, **50 tests** (async, offline, ≈ 3 s), **96 % branch coverage** |
 | Protocol | `/v1/chat/completions` (incl. SSE streaming), `/v1/completions`, `/v1/models`, OpenAI error envelope; `/health`, `/ready`, `/metrics`, `/admin/backends` |
 | Backends | `VLLMBackend` (guided-decoding JSON, `/health`), `OpenAICompatBackend`, `HFLocalBackend` (real streaming via `TextIteratorStreamer`), `FakeBackend` |
-| Headline | Gateway overhead ≈ **1 ms p50 / 1 ms p95 at 1 100 req/s** (fake backend, in-process); baseline-vs-candidate promotion of Qwen2.5-0.5B → 1.5B with paired bootstrap + McNemar: see [docs/RESULTS.md](docs/RESULTS.md) |
+| Headline | Gateway overhead ≈ **1 ms p50 / 1 ms p95 at 1 100 req/s** (fake backend, in-process); release workflow on real models: Qwen2.5-1.5B beats the 0.5B incumbent by **+0.38 [+0.23, +0.55]** (13 wins / 0 losses, McNemar p < 0.001) and is still **held** by the p95-latency SLO — [docs/RESULTS.md](docs/RESULTS.md) |
 
 Companion projects: [`rag-pipeline-eval`](../rag-pipeline-eval) (retrieval + RAGAS-style
 evaluation) and [`langgraph-agent-guardrails`](../langgraph-agent-guardrails) (LangGraph
@@ -67,7 +67,8 @@ rails, metrics — costs about a millisecond per request; the model dominates ev
 Qwen2.5-1.5B-Instruct (candidate) served through the gateway on one RTX 4070, evaluated on
 `evalsets/finance_qa.jsonl` (33 cases: acronyms, facts, arithmetic, instruction following,
 structured JSON, refusals), promotion policy in `deploy/promotion_policy.yaml`. The
-per-case scores, the paired comparison, the SLO checks and the decision are in
+per-case scores, the paired comparison, the SLO checks and the decision (**HOLD**: quality
+better on every tag, p95 latency 5 029 ms against a 4 000 ms SLO) are in
 [docs/RESULTS.md](docs/RESULTS.md) together with the canary split and the real-model load
 test.
 

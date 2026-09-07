@@ -227,7 +227,7 @@ def test_retrieval_bench_command(
     )
     assert code == 0
     text = out.read_text(encoding="utf-8")
-    assert "| bm25 |" in text and "hybrid[rrf]" in text and "hybrid[convex]" in text
+    assert "| `bm25` |" in text and "hybrid[rrf]" in text and "hybrid[convex]" in text
     assert out.with_suffix(".json").exists()
     assert "hit_rate@3" in capsys.readouterr().out
 

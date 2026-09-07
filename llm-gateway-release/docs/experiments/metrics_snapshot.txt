@@ -1,0 +1,6 @@
+llmgate_requests_total{backend="qwen05",route="direct",status="ok"} 34.0
+llmgate_requests_total{backend="qwen15",route="direct",status="ok"} 98.0
+llmgate_requests_total{backend="qwen05",route="primary",status="ok"} 14.0
+llmgate_requests_total{backend="qwen15",route="canary",status="ok"} 6.0
+llmgate_breaker_open{backend="qwen05"} 0.0
+llmgate_breaker_open{backend="qwen15"} 0.0

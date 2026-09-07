@@ -96,5 +96,5 @@ def render_bench_markdown(rows: Sequence[BenchRow], *, k: int) -> str:
             m = r.metrics.get(c, math.nan)
             lo, hi = r.ci.get(c, (math.nan, math.nan))
             cells.append("n/a" if math.isnan(m) else f"{m:.3f} [{lo:.2f}, {hi:.2f}]")
-        lines.append(f"| {r.name} | {r.n} | " + " | ".join(cells) + f" | {r.ms_per_query:.1f} |")
+        lines.append(f"| `{r.name}` | {r.n} | " + " | ".join(cells) + f" | {r.ms_per_query:.1f} |")
     return "\n".join(lines) + "\n"

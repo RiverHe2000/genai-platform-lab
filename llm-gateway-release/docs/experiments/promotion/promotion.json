@@ -1,0 +1,48 @@
+{
+  "promote": false,
+  "checks": [
+    {
+      "name": "sample size",
+      "passed": true,
+      "observed": "33",
+      "threshold": ">= 20"
+    },
+    {
+      "name": "absolute quality floor",
+      "passed": true,
+      "observed": "0.818",
+      "threshold": ">= 0.600"
+    },
+    {
+      "name": "quality vs baseline",
+      "passed": true,
+      "observed": "better",
+      "threshold": "non-inferior (margin 0.050)"
+    },
+    {
+      "name": "error rate",
+      "passed": true,
+      "observed": "0.0%",
+      "threshold": "<= 2.0%"
+    },
+    {
+      "name": "p95 latency",
+      "passed": false,
+      "observed": "5029 ms",
+      "threshold": "<= 4000 ms"
+    }
+  ],
+  "comparison": {
+    "n_pairs": 33,
+    "mean_candidate": 0.8181818181818182,
+    "mean_baseline": 0.4393939393939394,
+    "delta": 0.3787878787878788,
+    "ci_low": 0.22727272727272727,
+    "ci_high": 0.5454545454545454,
+    "p_improve": 1.0,
+    "wins": 13,
+    "losses": 0,
+    "mcnemar_p": 0.000244140625,
+    "verdict": "better"
+  }
+}

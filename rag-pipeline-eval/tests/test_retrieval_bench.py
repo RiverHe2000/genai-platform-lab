@@ -38,7 +38,7 @@ def test_bench_retrievers_scores_and_renders(bundle: IndexBundle) -> None:
     assert set(rows[0].per_sample) == {"a", "b"}
     assert rows[0].ci["mrr"][0] <= rows[0].metrics["mrr"] <= rows[0].ci["mrr"][1]
     md = render_bench_markdown(rows, k=3)
-    assert "| bm25 | 2 |" in md and "hit_rate@1" in md
+    assert "| `bm25` | 2 |" in md and "hit_rate@1" in md
     assert rows[0].to_dict()["name"] == "bm25"
 
 

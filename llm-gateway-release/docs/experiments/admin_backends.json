@@ -1,0 +1,1 @@
+{"backends":[{"backend":"qwen05","model":"Qwen/Qwen2.5-0.5B-Instruct","breaker":"closed","failures":0,"in_flight":0,"limit":4},{"backend":"qwen15","model":"Qwen/Qwen2.5-1.5B-Instruct","breaker":"closed","failures":0,"in_flight":0,"limit":4}],"shadow_samples":[]}

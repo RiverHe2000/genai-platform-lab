@@ -12,7 +12,7 @@ against the official `ragas` package with the same judge.
 |---|---|
 | Quality gates | `ruff`, `mypy --strict`, **143 tests** (offline, CPU, ≈ 6 s), **96 % branch coverage** |
 | Corpus / eval set | 20 policy documents (credit, IFRS 9, capital, liquidity, CPS 230, AML, privacy, GenAI governance …) → 35 chunks; 60 questions: 42 single-hop, 5 multi-hop, 12 paraphrased, 6 unanswerable |
-| Headline | Hybrid (bge-small + BM25, RRF) lifts **hit_rate@1 from 0.852 (BM25) to 0.926**; adding the cross-encoder reranker reaches **1.000 on every retrieval metric** at 189 ms/query. End-to-end RAGAS metrics with a local judge, the hybrid-vs-BM25 paired comparison and the official-`ragas` agreement: [docs/RESULTS.md](docs/RESULTS.md) |
+| Headline | Hybrid (bge-small + BM25, RRF) lifts **hit_rate@1 from 0.852 (BM25) to 0.926**; adding the cross-encoder reranker reaches **1.000 on every retrieval metric** at 189 ms/query. End-to-end RAGAS metrics with a local judge, the hybrid-vs-BM25 paired comparison, the production-gate decision and the status of the official-`ragas` cross-check: [docs/RESULTS.md](docs/RESULTS.md) |
 
 Companion projects: [`langgraph-agent-guardrails`](../langgraph-agent-guardrails) (LangGraph
 agent with rails) and [`llm-gateway-release`](../llm-gateway-release) (serving, vLLM,
@@ -69,8 +69,8 @@ rank-1 misses at ~25× the latency — the classic retrieve-cheap-then-rerank tr
 Generator and judge: Qwen2.5-1.5B-Instruct on one RTX 4070; retriever: hybrid RRF + rerank;
 baseline for the paired comparison: BM25 only. Faithfulness, answer relevancy, context
 precision/recall with confidence intervals, abstention behaviour on the six unanswerable
-questions, the `ragpipe compare` verdicts, the production gate outcome, and the agreement
-with the official `ragas` implementation are in [docs/RESULTS.md](docs/RESULTS.md).
+questions, the `ragpipe compare` verdicts, the production gate outcome, and the status of the
+cross-check against the official `ragas` implementation are in [docs/RESULTS.md](docs/RESULTS.md).
 
 ---
 
