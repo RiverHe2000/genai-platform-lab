@@ -9,7 +9,7 @@ description = "An OpenAI-compatible LLM gateway (vLLM / OpenAI / local HF / fake
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
-authors = [{ name = "River He" }]
+authors = [{ name = "Chuan He" }]
 dependencies = [
   "fastapi>=0.115",
   "httpx>=0.27",

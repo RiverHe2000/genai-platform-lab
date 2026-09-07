@@ -1,0 +1,75 @@
+name: CI · agent-mcp-eval
+
+on:
+  push:
+    branches: [main]
+    paths: ["agent-mcp-eval/**", ".github/workflows/agent-mcp-eval-ci.yml"]
+  pull_request:
+    paths: ["agent-mcp-eval/**", ".github/workflows/agent-mcp-eval-ci.yml"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: agent-mcp-eval
+
+jobs:
+  quality:
+    name: py${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    env:
+      HF_HUB_OFFLINE: "1"          # tests must never download models
+      TRANSFORMERS_OFFLINE: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: agent-mcp-eval/pyproject.toml
+
+      # No PyTorch here on purpose: the scripted chat model makes the whole benchmark
+      # runnable without a model, so CI stays a two-minute job.
+      - name: Install project (dev extras)
+        run: pip install -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type-check (mypy --strict)
+        run: mypy
+
+      - name: Test (pytest + coverage)
+        run: pytest --cov-report=xml
+
+      - name: Benchmark gate (deterministic, scripted model, every task)
+        # The full task set through both architectures. The scripted model makes this
+        # deterministic, so a change in agent behaviour shows up as a diff in the report
+        # rather than as noise.
+        run: |
+          mcpeval bench run --arch single --model scripted --out runs/ci-single
+          mcpeval bench run --arch supervisor --model scripted --out runs/ci-supervisor
+          mcpeval bench compare runs/ci-single runs/ci-supervisor --margin 0.05
+
+      - name: MCP protocol smoke test (real stdio transport)
+        # Proves the server is a real MCP server, not just a set of Python functions:
+        # this launches it as a subprocess and speaks the protocol to it.
+        run: mcpeval tools list --transport stdio
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py${{ matrix.python-version }}
+          path: agent-mcp-eval/coverage.xml
+          if-no-files-found: ignore

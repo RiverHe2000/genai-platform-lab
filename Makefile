@@ -1,7 +1,7 @@
 # Runs the same quality gates as CI for every project in this repository.
 # Usage: make install | make lint | make type | make test | make all
 #        make PROJECT=rag-pipeline-eval test      # one project only
-PROJECTS := rag-pipeline-eval langgraph-agent-guardrails llm-gateway-release
+PROJECTS := rag-pipeline-eval langgraph-agent-guardrails llm-gateway-release agent-mcp-eval
 PROJECT ?= $(PROJECTS)
 PY ?= python
 

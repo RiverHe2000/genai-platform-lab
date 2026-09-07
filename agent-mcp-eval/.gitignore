@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Runtime state (regenerable): benchmark runs, trajectories, the model response cache
+runs/
+state/
+*.sqlite
+*.sqlite-journal
+*.jsonl.log
+
+# Committed on purpose: docs/experiments/ holds the grades, aggregates and reports the
+# README cites -- 134 KB in total. The full per-step trajectory dumps are not committed:
+# they are 4.1 MB for one scripted pair of runs and grow with every real-model run, and
+# `bash scripts/run_experiments.sh` regenerates them byte for byte from the seed. The
+# aggregates and grades derived from them are committed, so every number in RESULTS.md is
+# still checkable without them.
+docs/experiments/*/trajectories.jsonl
+
+# Local logs and IDE files
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

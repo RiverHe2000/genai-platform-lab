@@ -1,0 +1,26 @@
+{
+  "label": "single/Qwen/Qwen2.5-1.5B-Instruct",
+  "architecture": "single",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "code_version": "0.1.0",
+  "task_count": 72,
+  "task_set_digest": "d202691ca52825db",
+  "policy_digest": "066e0aff7bd0153b",
+  "write_tools": [
+    "note_append",
+    "order_place"
+  ],
+  "approval_required": [
+    "note_append",
+    "order_place"
+  ],
+  "max_steps": 20,
+  "concurrency": 1,
+  "n_boot": 1000,
+  "alpha": 0.05,
+  "bootstrap_seed": 0,
+  "world_seed": 7,
+  "limit": null,
+  "resumed": [],
+  "created_at": null
+}

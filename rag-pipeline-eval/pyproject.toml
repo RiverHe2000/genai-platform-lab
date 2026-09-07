@@ -9,7 +9,7 @@ description = "Hybrid-retrieval RAG pipeline with a RAGAS-style evaluation harne
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
-authors = [{ name = "River He" }]
+authors = [{ name = "Chuan He" }]
 dependencies = [
   "numpy>=1.26",
   "pydantic>=2.8",
