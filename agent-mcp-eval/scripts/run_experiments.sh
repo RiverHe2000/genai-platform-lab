@@ -2,8 +2,8 @@
 # Regenerates everything docs/RESULTS.md cites.
 #
 # Two stages. The scripted stage is deterministic, runs on CPU in seconds and is the same
-# thing CI gates on. The Hugging Face stage needs a CUDA device and takes hours; it is what
-# turns "the harness works" into "here is what a real model actually does".
+# thing CI gates on. The Hugging Face stage needs a CUDA device and takes an hour or two; it
+# is what turns "the harness works" into "here is what a real model actually does".
 #
 # Usage:  bash scripts/run_experiments.sh [--scripted-only] [--limit N]
 set -euo pipefail
@@ -45,17 +45,25 @@ echo "== 3. Real model: Qwen2.5-1.5B-Instruct, both architectures"
 # 1.5B rather than 0.5B because 0.5B does not reliably emit the action protocol at all, and
 # rather than 4B because 4B runs at roughly a third of the speed for 60 long-horizon tasks.
 # The 4B slice below measures what that extra capacity buys.
-export HF_HUB_OFFLINE=1
+#
+# No HF_HUB_OFFLINE and no response cache, on purpose. Forcing offline mode makes the first
+# run on a fresh machine fail before it starts; and a cached replay reproduces every
+# trajectory exactly -- greedy decoding, same batch composition -- but its `wall_ms` column
+# then measures SQLite lookups, and a committed aggregate whose timing column means something
+# other than what it says is worse than one with no timing column at all. `--resume` is
+# kept: it skips tasks whose trajectory is already on disk, which costs nothing in fidelity.
+export TOKENIZERS_PARALLELISM=false
 MODEL=Qwen/Qwen2.5-1.5B-Instruct
 
-# One attempt at a time and a shared response cache. The Hugging Face backend holds a
-# single model in this process and `complete` is a blocking call, so concurrency buys
-# nothing and only interleaves the trajectories; the cache makes a resumed run free.
-CACHE="$OUT/hf-cache.sqlite"
+# One attempt at a time. The Hugging Face backend holds a single model in this process and
+# `complete` is a blocking call, so concurrency buys nothing and only interleaves the
+# trajectories.
+# shellcheck disable=SC2086
 mcpeval bench run --arch single --model hf --model-name "$MODEL" \
-  --concurrency 1 --cache "$CACHE" --resume $LIMIT_ARG --out "$OUT/qwen15-single"
+  --concurrency 1 --resume $LIMIT_ARG --out "$OUT/qwen15-single"
+# shellcheck disable=SC2086
 mcpeval bench run --arch supervisor --model hf --model-name "$MODEL" \
-  --concurrency 1 --cache "$CACHE" --resume $LIMIT_ARG --out "$OUT/qwen15-supervisor"
+  --concurrency 1 --resume $LIMIT_ARG --out "$OUT/qwen15-supervisor"
 mcpeval bench compare "$OUT/qwen15-single" "$OUT/qwen15-supervisor" \
   --margin 0.05 | tee "$OUT/qwen15_compare.md"
 
@@ -63,19 +71,19 @@ echo
 echo "== 4. Model-size ablation: does a larger model close the gap the architecture opens?"
 # A hub id, not a local path: this script has to run on a machine that is not mine.
 # Point $MCPEVAL_BIG_MODEL at a local directory to use one that is already downloaded.
+# Not run for the committed results -- see section 4 of docs/RESULTS.md for why.
 BIG=${MCPEVAL_BIG_MODEL:-Qwen/Qwen3-4B-Instruct-2507}
 mcpeval bench run --arch single --model hf --model-name "$BIG" \
-  --concurrency 1 --cache "$OUT/hf-cache-4b.sqlite" --resume --limit 24 --out "$OUT/qwen4b-single"
+  --concurrency 1 --resume --limit 24 --out "$OUT/qwen4b-single"
 mcpeval bench run --arch supervisor --model hf --model-name "$BIG" \
-  --concurrency 1 --cache "$OUT/hf-cache-4b.sqlite" --resume --limit 24 --out "$OUT/qwen4b-supervisor"
+  --concurrency 1 --resume --limit 24 --out "$OUT/qwen4b-supervisor"
 mcpeval bench compare "$OUT/qwen4b-single" "$OUT/qwen4b-supervisor" \
   --margin 0.05 | tee "$OUT/qwen4b_compare.md"
 
 echo
-echo "== 5. Reports"
+echo "== 5. Reports and the rendered sample trajectories"
 for d in "$OUT"/*/; do
   [ -f "$d/aggregate.json" ] || continue
   mcpeval bench report "$d" > "$d/report.md"
 done
-
-echo "Done. Every number in docs/RESULTS.md should trace to a file under $OUT."
+python scripts/render_trajectories.py --out "$OUT/sample-trajectories.md"

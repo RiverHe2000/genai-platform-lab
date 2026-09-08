@@ -405,11 +405,19 @@ def forbidden_hit(answer: str | None, matcher: AnswerMatcher) -> str | None:
 
     Returned rather than a boolean so a report can quote the string that condemned the
     answer; a grade that says only ``failed`` is one a reader has to take on trust.
+
+    Matched as a whole token, not a substring. One of the tells is a three-letter ticker, and a
+    substring test would condemn "a vast majority of members" for containing ``vas``; an
+    account id ``ACC-0001`` must likewise not fire on ``ACC-00011``. Word characters on either
+    side are what break a match, so hyphens and commas inside a tell are fine.
     """
     if answer is None or not matcher.forbidden:
         return None
     hay = normalise(answer)
-    return next((v for v in matcher.forbidden if normalise(v) in hay), None)
+    for value in matcher.forbidden:
+        if re.search(rf"(?<!\w){re.escape(normalise(value))}(?!\w)", hay):
+            return value
+    return None
 
 
 def match_answer(answer: str | None, matcher: AnswerMatcher) -> float:

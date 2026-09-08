@@ -35,3 +35,6 @@ docs/experiments/*/trajectories.jsonl
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Hypothesis example database (regenerated on every run)
+.hypothesis/

@@ -17,11 +17,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from mcpeval.agents.protocol import (
+    CallToolAction,
+    ClarifyAction,
+    FinalAction,
+    HandoffAction,
+    parse_action,
+)
 from mcpeval.bench.tasks import build_tasks
 from mcpeval.world.store import build_world
 
@@ -124,20 +132,70 @@ def _cell(value: str) -> str:
     return value.replace("|", "\\|")
 
 
+ROLE_PROMPT = re.compile(r"You are the (\w+) agent")
+
+
+def _verdict(call: dict[str, Any]) -> str:
+    decision = call.get("decision") or {}
+    verdict = decision.get("verdict", "?")
+    rule = decision.get("rule", "")
+    text = f"**{verdict}**"
+    if verdict != "allow" and rule:
+        text += f" (`{rule}`)"
+    return text
+
+
 def _rows(traj: dict[str, Any]) -> Iterator[str]:
-    """One row per recorded call, then the answer, in the order they happened."""
-    for index, call in enumerate(traj.get("calls", ()), start=1):
-        decision = call.get("decision") or {}
-        verdict = decision.get("verdict", "?")
-        rule = decision.get("rule", "")
-        arguments = json.dumps(call.get("arguments", {}), sort_keys=True)
-        detail = f"`{call['tool']}({_clip(arguments, 90)})` → **{verdict}**"
-        if verdict != "allow" and rule:
-            detail += f" (`{rule}`)"
-        yield (f"| {index} | {call.get('agent', '—')} | call_tool | {_cell(detail)} |")
-    answer = traj.get("final_answer")
-    if answer:
-        yield f"| — | — | final | {_cell(_clip(answer, ANSWER_LIMIT))} |"
+    """One row per model turn, in conversation order, labelled with the role that took it.
+
+    The role is read off the system prompt that opened each agent's context, because the
+    messages do not carry it and the call records carry it only for calls. Walking the turns
+    rather than the call list is what makes a supervisor trajectory look like one: the
+    handoffs, the writer and the verifier take turns too, and a table of calls alone shows a
+    single researcher lookup where seven model turns happened.
+    """
+    calls = list(traj.get("calls", ()))
+    role = "—"
+    supervisor_seen = False
+    turn = 0
+    for message in traj.get("messages", ()):
+        if message.get("role") == "system":
+            found = ROLE_PROMPT.search(message.get("content", ""))
+            role = found.group(1) if found else role
+            supervisor_seen = supervisor_seen or role == "supervisor"
+            continue
+        if message.get("role") != "assistant":
+            continue
+        turn += 1
+        parsed = parse_action(message.get("content", ""))
+        action = parsed.action
+        if isinstance(action, HandoffAction):
+            brief = next(
+                (v for k, v in action.model_dump().items() if k != "to" and isinstance(v, str)),
+                "",
+            )
+            detail = f"→ **{action.to}**: {_clip(brief, 110)}"
+            kind = "handoff"
+        elif isinstance(action, CallToolAction):
+            record = calls.pop(0) if calls else None
+            arguments = json.dumps(action.arguments, sort_keys=True)
+            detail = f"`{action.tool}({_clip(arguments, 90)})`"
+            detail += f" → {_verdict(record)}" if record is not None else ""
+            kind = "call_tool"
+        elif isinstance(action, FinalAction):
+            detail = _clip(action.answer, ANSWER_LIMIT)
+            kind = "final"
+        elif isinstance(action, ClarifyAction):
+            detail = _clip(action.question, ANSWER_LIMIT)
+            kind = "clarify"
+        else:
+            detail = f"unparseable: {_clip(parsed.error or message.get('content', ''), 110)}"
+            kind = "—"
+        yield f"| {turn} | {role} | {kind} | {_cell(detail)} |"
+        # A specialist's context closes with its answer; the next turn is the supervisor's
+        # again, and no new system prompt marks that because its context was opened once.
+        if kind in {"final", "clarify"} and supervisor_seen and role != "supervisor":
+            role = "supervisor"
 
 
 def render(pick: Pick, tasks: dict[str, dict[str, Any]]) -> str | None:
@@ -189,6 +247,15 @@ def main() -> None:
     args = parser.parse_args()
     tasks = _tasks()
     blocks = [rendered for pick in PICKS if (rendered := render(pick, tasks)) is not None]
+    missing = len(PICKS) - len(blocks)
+    if not blocks:
+        raise SystemExit(
+            "no trajectories found under docs/experiments/; run scripts/run_experiments.sh first"
+        )
+    if missing:
+        print(
+            f"warning: {missing} of {len(PICKS)} picks have no trajectory on disk and were skipped"
+        )
     header = [
         "# Sample trajectories",
         "",

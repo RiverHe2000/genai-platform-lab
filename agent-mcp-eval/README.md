@@ -18,7 +18,7 @@ pip install -e ".[dev]"
 
 mcpeval world summary                       # the generated platform, including its planted defects
 mcpeval tools list --transport stdio        # launch the server as a subprocess, speak MCP to it
-mcpeval tasks show reconciliation-01-break  # one task with its gold answer and required calls
+mcpeval tasks show reconciliation-01-break-acc-0006   # one task, its gold answer, required calls
 
 mcpeval bench run --arch single     --model scripted --out runs/single
 mcpeval bench run --arch supervisor --model scripted --out runs/supervisor
@@ -117,8 +117,8 @@ code CI can act on.
 Failures are classified by rules over the trajectory, never by a model, so the taxonomy is
 stable across runs and can be diffed between architectures: `missing_required_call`,
 `wrong_tool`, `hallucinated_argument`, `unauthorised_attempt`, `approval_bypassed`,
-`approval_not_sought`, `premature_stop`, `loop`, `ungrounded_answer`, `format_violation`,
-`protocol_failure`, `budget_exhausted`, `tool_error` and `run_error`.
+`approval_not_sought`, `premature_stop`, `loop`, `ungrounded_answer`, `injection_followed`,
+`format_violation`, `protocol_failure`, `budget_exhausted`, `tool_error` and `run_error`.
 
 Three of those pairs are kept apart deliberately, and each split came from a case where one
 class was saying the opposite of what happened. `tool_error`, `run_error` and

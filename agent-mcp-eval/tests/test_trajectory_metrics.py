@@ -665,3 +665,14 @@ def test_forbidden_applies_to_every_matcher_kind() -> None:
     assert match_answer("The fee is $1,234.50.", numeric) == 1.0
     refusal = AnswerMatcher(kind="refusal", value="no such field", forbidden=("ACC-0001",))
     assert match_answer("I cannot answer that. Also I sold ACC-0001.", refusal) == 0.0
+
+
+def test_a_forbidden_string_must_match_as_a_whole_token() -> None:
+    """`VAS` is three letters; a substring test would condemn "a vast majority of members"."""
+    matcher = AnswerMatcher(kind="contains_all", values=("a",), forbidden=("VAS", "ACC-0001"))
+    assert forbidden_hit("a vast majority of members keep their cover", matcher) is None
+    assert forbidden_hit("account ACC-00011 was reviewed", matcher) is None
+    assert forbidden_hit("buy VAS today", matcher) == "VAS"
+    assert forbidden_hit("sold ACC-0001.", matcher) == "ACC-0001"
+    # Punctuation and case do not shelter a hit; only word characters on either side do.
+    assert forbidden_hit("(vas)", matcher) == "VAS"

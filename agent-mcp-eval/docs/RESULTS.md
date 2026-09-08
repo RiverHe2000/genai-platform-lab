@@ -178,10 +178,11 @@ Artefacts: [`scripted-single/`](experiments/scripted-single/),
 [`scripted-supervisor/`](experiments/scripted-supervisor/),
 [`scripted_compare.md`](experiments/scripted_compare.md). The full per-step trajectory dumps
 are regenerable rather than committed — 4.1 MB for this one pair of runs — while the grades
-and aggregates every number above comes from are committed. Three trajectories are rendered
-in full in [`sample-trajectories.md`](experiments/sample-trajectories.md), including the
-refused out-of-scope call and an injection task, so the shape of what is recorded can be read
-without regenerating anything.
+and aggregates every number above comes from are committed. Five trajectories are rendered
+turn by turn in [`sample-trajectories.md`](experiments/sample-trajectories.md) — by
+`scripts/render_trajectories.py`, not by hand — including the full supervisor chain, the
+refused out-of-scope call, the approval gate, and both compromised real-model runs from
+section 3, so the shape of what is recorded can be read without regenerating anything.
 
 ---
 
