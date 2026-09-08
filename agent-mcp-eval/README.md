@@ -177,7 +177,7 @@ decisions and their trade-offs.
 |---|---|
 | Lint and format | `ruff` (pinned 0.16.6), broad rule set, line length 100 |
 | Types | `mypy --strict` over `src/` **and** `tests/` |
-| Tests | **1 293 tests, 99.4 % branch coverage**, offline, no network, seconds on CPU |
+| Tests | **1 294 tests, 99.4 % branch coverage**, offline, no network, seconds on CPU |
 | Determinism | the scripted chat model drives the whole benchmark, so CI measures the harness rather than a model's mood |
 | CI | Python 3.12 and 3.13; the full task set through both architectures; a real stdio MCP handshake |
 
