@@ -1,6 +1,6 @@
 # agent-mcp-eval — `mcpeval`
 
-[![CI](https://github.com/ChuanHe-PhD/genai-platform-lab/actions/workflows/agent-mcp-eval-ci.yml/badge.svg)](https://github.com/ChuanHe-PhD/genai-platform-lab/actions/workflows/agent-mcp-eval-ci.yml)
+[![CI](https://github.com/RiverHe2000/genai-platform-lab/actions/workflows/agent-mcp-eval-ci.yml/badge.svg)](https://github.com/RiverHe2000/genai-platform-lab/actions/workflows/agent-mcp-eval-ci.yml)
 
 A **Model Context Protocol** server for a wealth-management platform, two agent
 architectures that consume it under a permission policy, and a 72-task long-horizon
