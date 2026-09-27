@@ -1,0 +1,45 @@
+{
+  "status": "operator_feasibility_stop",
+  "recorded_at_utc": "2026-09-27T05:21:43.780356+00:00",
+  "source_commit": "29d7ee3c350c47491db83d9f46536af326f993b5",
+  "reason": "Resource feasibility: WDDM GPU shared-memory spill and low system commit headroom. Not quality-based selection and not an observed OOM. No model, task, budget, or precision changes made during v1.",
+  "termination": "Ctrl+C sent through execution session 15701; execution layer returned exit 1, worker ended, GPU released. Python finally did not update receipt; original status=running is preserved, so verifier rejects it.",
+  "completed_tasks": 2,
+  "completed_backend_calls": 7,
+  "study_comparison_available": false,
+  "observed_resources": {
+    "python_pid": 46652,
+    "gpu_dedicated_bytes": 12219912192,
+    "gpu_shared_bytes": 13279166464,
+    "gpu_total_committed_bytes": 25499078656,
+    "python_private_gib": 22.402,
+    "python_working_set_gib": 9.307,
+    "gpu_power_w": 69.32,
+    "gpu_power_limit_w": 200,
+    "gpu_temperature_c": 51,
+    "gpu_utilization_percent": 97,
+    "system_available_bytes_later": 678342656,
+    "system_committed_bytes_later": 72805928960,
+    "system_commit_limit_bytes_later": 75106963456
+  },
+  "read_only_diagnosis": {
+    "torch": "2.11.0+cu128",
+    "flash_attention_compiled": false,
+    "diagnostic_cuda_initialized": false,
+    "hf_attention": "sdpa with enable_gqa=True for unmasked grouped-query attention",
+    "kv_cache": true,
+    "logits_to_keep": 1,
+    "inference_mode": true,
+    "kernel_status": "Math fallback strongly indicated by installed PyTorch GQA documentation; runtime kernel profiling reserved for separate post-stop probe."
+  },
+  "after_stop": {
+    "gpu_used_mib": 326,
+    "gpu_utilization_percent": 0,
+    "system_available_bytes": 15472582656
+  },
+  "partial_file_sha256": {
+    "qwen4b/receipt.json": "65fd9283ff1c60cc7d652f07b889c6796a9dd3bad94c92561791226aa5afe936",
+    "qwen4b/repeat-01-single/model_calls.jsonl": "6cccd76165b3dceb7a426c6ed63d2fffff7c90abc71313743d33c33346105e0b",
+    "qwen4b/repeat-01-single/trajectories.jsonl": "bbfa7b700afa425550377531604bed5c3df0d14a8c1098f40694d5bacfbb1da2"
+  }
+}
