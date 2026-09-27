@@ -13,6 +13,17 @@ touch. So every attempt here is recorded as a trajectory — every proposed call
 ruling that admitted or refused it, the result digest, the tokens — and the grade is
 computed over that.
 
+**Latest real inference (27 September 2026):** on a frozen 18-task diagnostic slice,
+Qwen2.5-1.5B scores **0/18 single, 2/18 supervisor**; Qwen3-4B scores **12/18 single,
+13/18 supervisor**, identically across two repeats. Both use bf16 and the same
+20-turn / 512-output-token ceilings. The 4B architecture gap remains inconclusive;
+injection and approval failures remain. These models also differ in generation and
+training, so the difference cannot be attributed to size alone.
+[Results, actual cost and scoring limits](docs/experiments/local-live-v2/INTERPRETATION.md)
+· [Paired comparison](docs/experiments/local-live-v2/comparison/comparison.md)
+· [Frozen protocol](docs/LIVE_PROTOCOL_V2.md).
+This real-model slice is separate from the full 72-task historical study and scripted CI.
+
 ```bash
 pip install -e ".[dev]"
 
@@ -196,8 +207,9 @@ from an honest **HOLD** in the architecture comparison. A changed scripted outco
 even if it increases the aggregate success score; research non-promotion is recorded normally.
 For a release that must require promotion, use `bench compare --gate` explicitly.
 
-The real-model results above are historical runs with the settings and manifests committed in
-`docs/experiments`. No stronger-model rerun is implied by the current offline regression checks.
+The 72-task real-model results in `docs/RESULTS.md` are historical runs with their original
+settings and manifests committed in `docs/experiments`. The latest 18-task v2 comparison above
+has separate model receipts; offline scripted regression checks remain harness evidence.
 
 The [frozen local live protocol](docs/LIVE_PROTOCOL.md) defines a separate 18-task,
 two-model comparison with pinned revisions, repeated real inference, full tool trajectories,

@@ -54,6 +54,16 @@ jobs:
       - name: Test (pytest + coverage)
         run: pytest --cov-report=xml
 
+      - name: Verify committed v2 model evidence without inference
+        # Uses raw committed bytes and trajectory regrading; no torch, model load,
+        # network request or paid API. Historical v1 requires its own source commit.
+        run: |
+          python -m mcpeval.bench.live_v2 --verify --out docs/experiments/local-live-v2/qwen15
+          python -m mcpeval.bench.live_v2 --verify --out docs/experiments/local-live-v2/qwen4b
+          python -m mcpeval.bench.live_v2 --compare docs/experiments/local-live-v2/qwen15 docs/experiments/local-live-v2/qwen4b --out runs/ci-live-v2-comparison
+          diff docs/experiments/local-live-v2/comparison/comparison.json runs/ci-live-v2-comparison/comparison.json
+          diff docs/experiments/local-live-v2/comparison/comparison.md runs/ci-live-v2-comparison/comparison.md
+
       - name: Harness regression gate and research comparison
         # Fail on changed per-task scripted outcomes. HOLD in the separate architecture
         # comparison is a valid research finding, not a harness regression.

@@ -17,7 +17,7 @@ a benchmark that grades an agent's whole trajectory rather than its final answer
 | 01 | [rag-pipeline-eval](rag-pipeline-eval/) | Grounded retrieval, evaluation and release checks | Hit rate@1 **0.852 → 0.926 → 1.000** on 54 answerable questions / 35 chunks; answer-quality gate **HOLD**, official RAGAS cross-check unresolved. [Evidence](rag-pipeline-eval/docs/RESULTS.md) |
 | 02 | [langgraph-agent-guardrails](langgraph-agent-guardrails/) | Tool permissions, human approval and redacted replay | Scripted harness **29/29**; Qwen 1.5B meets **8/13 benign, 11/16 adversarial** scenario expectations. [What these scores mean](langgraph-agent-guardrails/docs/RESULTS.md) |
 | 03 | [llm-gateway-release](llm-gateway-release/) | Routing, resilience, streaming controls and release decisions | About **1 ms** overhead with an in-process fake backend; real 1.5B candidate quality improves but promotion is **HOLD** on latency. [Evidence](llm-gateway-release/docs/RESULTS.md) |
-| 04 | [agent-mcp-eval](agent-mcp-eval/) | MCP permissions and trajectory-based comparison of single vs supervisor agents | Qwen 1.5B success **13.9% vs 15.3%**, statistically inconclusive; two injected-document attacks defeat both arms. The benchmark catches false-success grading defects. [Evidence](agent-mcp-eval/docs/RESULTS.md) |
+| 04 | [agent-mcp-eval](agent-mcp-eval/) | MCP permissions and trajectory-based comparison of single vs supervisor agents | Latest 18-task real-model slice: Qwen 1.5B **0/18 vs 2/18**, Qwen3-4B **12/18 vs 13/18**, repeated twice. Architecture advantage remains inconclusive; security and strict-matcher failures remain. [Results, cost and limits](agent-mcp-eval/docs/experiments/local-live-v2/INTERPRETATION.md) |
 
 Companion repositories: [`llm-engineering-lab`](https://github.com/RiverHe2000/llm-engineering-lab)
 (Transformer internals, LoRA, an inference server) and [`mlops-lab`](https://github.com/RiverHe2000/mlops-lab)
@@ -31,7 +31,8 @@ For agent engineering, start with `agent-mcp-eval`: inspect a failed trajectory,
 scripted demo, then read the comparison limits. For retrieval roles, use the lightweight
 RAG quickstart and the paired retrieval/answer-quality report. These are measured laboratory
 examples on fictional bank and wealth-platform data; scripted checks prove harness behaviour.
-The committed real-model reports describe historical runs, not production deployments.
+The reports separate historical runs from the latest controlled local-model comparison;
+all are laboratory evidence rather than production deployments.
 
 ## The through-line
 

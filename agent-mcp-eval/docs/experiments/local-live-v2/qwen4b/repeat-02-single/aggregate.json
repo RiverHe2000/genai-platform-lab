@@ -1,0 +1,837 @@
+{
+  "label": "single/Qwen/Qwen3-4B-Instruct-2507",
+  "architecture": "single",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "n": 18,
+  "overall": {
+    "label": "overall",
+    "n": 18,
+    "metrics": {
+      "success": {
+        "point": 0.6666666666666666,
+        "low": 0.4444444444444444,
+        "high": 0.8888888888888888,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "answer_score": {
+        "point": 0.7407407407407408,
+        "low": 0.537037037037037,
+        "high": 0.925925925925926,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "call_precision": {
+        "point": 0.8805555555555555,
+        "low": 0.7666666666666667,
+        "high": 0.9777777777777779,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "call_recall": {
+        "point": 0.9027777777777778,
+        "low": 0.7777777777777778,
+        "high": 1.0,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "call_f1": {
+        "point": 0.8796296296296297,
+        "low": 0.7731481481481481,
+        "high": 0.9722222222222222,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "step_efficiency": {
+        "point": 0.837962962962963,
+        "low": 0.7083333333333334,
+        "high": 0.949074074074074,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "redundant_calls": {
+        "point": 0.0,
+        "low": 0.0,
+        "high": 0.0,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "forbidden_violations": {
+        "point": 0.05555555555555555,
+        "low": 0.0,
+        "high": 0.16666666666666666,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "steps": {
+        "point": 3.0555555555555554,
+        "low": 2.4444444444444446,
+        "high": 3.6680555555555543,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "tokens": {
+        "point": 12050.777777777777,
+        "low": 9177.038888888888,
+        "high": 15071.113888888887,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "wall_ms": {
+        "point": 11760.420177788345,
+        "low": 8695.397131120262,
+        "high": 14855.211214174697,
+        "alpha": 0.05,
+        "n": 18
+      }
+    }
+  },
+  "by_family": [
+    {
+      "label": "lookup",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 0.8333333333333333,
+          "low": 0.6666666666666666,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 2.5,
+          "low": 2.0,
+          "high": 3.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 9162.5,
+          "low": 7307.0,
+          "high": 11018.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 6951.729849999538,
+          "low": 5866.620699991472,
+          "high": 8036.839000007603,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "multi_hop",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 0.55,
+          "low": 0.5,
+          "high": 0.6,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 0.7083333333333333,
+          "low": 0.6666666666666666,
+          "high": 0.7499999999999999,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 5.5,
+          "low": 5.0,
+          "high": 6.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 24739.5,
+          "low": 22060.0,
+          "high": 27419.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 24791.25360000762,
+          "low": 24677.730199997313,
+          "high": 24904.77700001793,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "aggregation",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 0.5,
+          "low": 0.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 0.5,
+          "low": 0.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 0.625,
+          "low": 0.25,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 0.625,
+          "low": 0.25,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 0.625,
+          "low": 0.25,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 5.0,
+          "low": 5.0,
+          "high": 5.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 20822.5,
+          "low": 20212.0,
+          "high": 21433.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 20674.28395000752,
+          "low": 19482.36490000272,
+          "high": 21866.20300001232,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "reconciliation",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 2.0,
+          "low": 2.0,
+          "high": 2.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 7347.5,
+          "low": 7347.0,
+          "high": 7348.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 6388.787250034511,
+          "low": 6354.8328000470065,
+          "high": 6422.741700022016,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "constrained_action",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 0.3333333333333333,
+          "low": 0.0,
+          "high": 0.6666666666666666,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 0.75,
+          "low": 0.5,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 0.5,
+          "low": 0.5,
+          "high": 0.5,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 0.5833333333333333,
+          "low": 0.5,
+          "high": 0.6666666666666666,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 0.875,
+          "low": 0.75,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 3.0,
+          "low": 2.0,
+          "high": 4.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 11377.5,
+          "low": 7220.0,
+          "high": 15535.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 12527.671500021825,
+          "low": 6283.1385000026785,
+          "high": 18772.20450004097,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "unanswerable",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 0.6666666666666666,
+          "low": 0.3333333333333333,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 2.0,
+          "low": 1.0,
+          "high": 3.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 7261.5,
+          "low": 3540.0,
+          "high": 10983.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 5540.957499993965,
+          "low": 2732.737399986945,
+          "high": 8349.177600000985,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    },
+    {
+      "label": "injection",
+      "n": 4,
+      "metrics": {
+        "success": {
+          "point": 0.25,
+          "low": 0.0,
+          "high": 0.75,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "answer_score": {
+          "point": 0.41666666666666663,
+          "low": 0.0,
+          "high": 0.8333333333333333,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "call_precision": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "call_f1": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "step_efficiency": {
+          "point": 0.9166666666666666,
+          "low": 0.75,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "forbidden_violations": {
+          "point": 0.25,
+          "low": 0.0,
+          "high": 0.75,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "steps": {
+          "point": 2.25,
+          "low": 2.0,
+          "high": 2.75,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "tokens": {
+          "point": 8389.5,
+          "low": 7370.5,
+          "high": 10338.5,
+          "alpha": 0.05,
+          "n": 4
+        },
+        "wall_ms": {
+          "point": 9527.778075018432,
+          "low": 8329.246900044382,
+          "high": 10726.309249992482,
+          "alpha": 0.05,
+          "n": 4
+        }
+      }
+    },
+    {
+      "label": "ambiguous",
+      "n": 2,
+      "metrics": {
+        "success": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "answer_score": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_precision": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_recall": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "call_f1": {
+          "point": 1.0,
+          "low": 1.0,
+          "high": 1.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "step_efficiency": {
+          "point": 0.3333333333333333,
+          "low": 0.3333333333333333,
+          "high": 0.3333333333333333,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "redundant_calls": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "forbidden_violations": {
+          "point": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "steps": {
+          "point": 3.0,
+          "low": 3.0,
+          "high": 3.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "tokens": {
+          "point": 10967.0,
+          "low": 10958.0,
+          "high": 10976.0,
+          "alpha": 0.05,
+          "n": 2
+        },
+        "wall_ms": {
+          "point": 9913.541799993254,
+          "low": 9800.200700003188,
+          "high": 10026.88289998332,
+          "alpha": 0.05,
+          "n": 2
+        }
+      }
+    }
+  ],
+  "failures": [
+    {
+      "failure": "none",
+      "count": 13,
+      "rate": {
+        "point": 0.7222222222222222,
+        "low": 0.5,
+        "high": 0.9444444444444444,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "missing_required_call",
+      "count": 3,
+      "rate": {
+        "point": 0.16666666666666666,
+        "low": 0.0,
+        "high": 0.3333333333333333,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "wrong_tool",
+      "count": 2,
+      "rate": {
+        "point": 0.1111111111111111,
+        "low": 0.0,
+        "high": 0.2777777777777778,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "unauthorised_attempt",
+      "count": 1,
+      "rate": {
+        "point": 0.05555555555555555,
+        "low": 0.0,
+        "high": 0.16666666666666666,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "premature_stop",
+      "count": 3,
+      "rate": {
+        "point": 0.16666666666666666,
+        "low": 0.0,
+        "high": 0.3333333333333333,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "ungrounded_answer",
+      "count": 2,
+      "rate": {
+        "point": 0.1111111111111111,
+        "low": 0.0,
+        "high": 0.2777777777777778,
+        "alpha": 0.05,
+        "n": 18
+      }
+    },
+    {
+      "failure": "injection_followed",
+      "count": 2,
+      "rate": {
+        "point": 0.1111111111111111,
+        "low": 0.0,
+        "high": 0.2777777777777778,
+        "alpha": 0.05,
+        "n": 18
+      }
+    }
+  ],
+  "alpha": 0.05,
+  "n_boot": 1000,
+  "seed": 0
+}

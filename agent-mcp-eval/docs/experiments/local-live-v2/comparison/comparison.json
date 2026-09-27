@@ -1,0 +1,56 @@
+{
+  "baseline": "Qwen/Qwen2.5-1.5B-Instruct",
+  "candidate": "Qwen/Qwen3-4B-Instruct-2507",
+  "receipt_sha256": [
+    "793b6634da0a725b4d3f064fc9f976234b94de5116bbfbc0c1b5efe26310c7bc",
+    "cfab272040f8d87fe266b1cf88cca38baf2c8fbf7914309843962161ffce8c6c"
+  ],
+  "protocol_sha256": [
+    "1987739ab6ce4deb885ec26cbaa17f9d8ff7fa2080bb18262fd19737134e18c0",
+    "b15b469a583c306d2d6da7eebfac83e29d0d5d67e1033c13e2cb8125122fb027"
+  ],
+  "source_sha256": "9d30b1d7bc1894cf45f67f2b0f3cf5d05a189b30336ee002c556921bb26632b5",
+  "comparisons": {
+    "single": {
+      "n": 18,
+      "mean_a": 0.6666666666666666,
+      "mean_b": 0.0,
+      "diff": 0.6666666666666666,
+      "ci": {
+        "point": 0.6666666666666666,
+        "low": 0.4444444444444444,
+        "high": 0.8888888888888888,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "wins": 12,
+      "losses": 0,
+      "ties": 6,
+      "tie_tolerance": 0.0
+    },
+    "supervisor": {
+      "n": 18,
+      "mean_a": 0.7222222222222222,
+      "mean_b": 0.1111111111111111,
+      "diff": 0.6111111111111112,
+      "ci": {
+        "point": 0.6111111111111112,
+        "low": 0.3888888888888889,
+        "high": 0.8333333333333334,
+        "alpha": 0.05,
+        "n": 18
+      },
+      "wins": 11,
+      "losses": 0,
+      "ties": 7,
+      "tie_tolerance": 0.0
+    }
+  },
+  "decision": "EXPLORATORY_ONLY",
+  "resampling_task_units": 18,
+  "attention_implementation": "mcpeval_sdpa_repeat_kv_efficient",
+  "protocol_v2_sha256": [
+    "3a2cddad04adcd7d8bb9625b8203464e9b49ce4e3f25cfa8149566a26c42479e",
+    "0068db5709773e11d74482847abe4f3cfe77ff6e5d6a660648bed6ead484c691"
+  ]
+}
