@@ -1,0 +1,62 @@
+{
+  "purpose": "unscored synthetic tensor and long-prompt resource feasibility check",
+  "torch": "2.11.0+cu128",
+  "flash_compiled": false,
+  "modes": {
+    "prefill": {
+      "original_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_attention_math"
+      ],
+      "efficient_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_efficient_attention",
+        "aten::_efficient_attention_forward"
+      ],
+      "max_absolute_diff": 0.015625,
+      "allclose_atol_0.02_rtol_0.02": true
+    },
+    "decode": {
+      "original_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_attention_math"
+      ],
+      "efficient_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_efficient_attention",
+        "aten::_efficient_attention_forward"
+      ],
+      "max_absolute_diff": 0.00390625,
+      "allclose_atol_0.02_rtol_0.02": true
+    },
+    "mask": {
+      "original_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_attention_math"
+      ],
+      "efficient_ops": [
+        "aten::scaled_dot_product_attention",
+        "aten::_scaled_dot_product_efficient_attention",
+        "aten::_efficient_attention_forward"
+      ],
+      "max_absolute_diff": 0.015625,
+      "allclose_atol_0.02_rtol_0.02": true
+    }
+  },
+  "status": "passed",
+  "load_seconds": 8.783805200015195,
+  "generation_seconds": 2.010525299992878,
+  "prompt_tokens": 5066,
+  "completion_tokens": 7,
+  "reply": "{\"status\": \"ready\"}",
+  "peak_allocated_bytes": 9262447104,
+  "peak_reserved_bytes": 9609150464,
+  "attention_implementation": "mcpeval_sdpa_repeat_kv_efficient",
+  "dtype": "torch.bfloat16",
+  "windows_gpu_process_memory": {
+    "Name": "pid_21512_luid_0x00000000_0x0000EFA8_phys_0",
+    "DedicatedUsage": 9824239616,
+    "SharedUsage": 85983232,
+    "TotalCommitted": 9910222848
+  }
+}

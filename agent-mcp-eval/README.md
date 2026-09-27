@@ -204,6 +204,11 @@ two-model comparison with pinned revisions, repeated real inference, full tool t
 and checksum receipts. Its preflight and evidence verification are model-free; running it
 requires locally cached weights. Scripted regression outcomes are not model baselines.
 
+The [version 2 execution protocol](docs/LIVE_PROTOCOL_V2.md) preserves that task/turn/token
+budget while requiring memory-efficient CUDA attention for both models. The v1 4B attempt
+was stopped for resource feasibility; its partial evidence is retained separately, without
+a completed cross-model claim. Version 2 starts both models fresh.
+
 ---
 
 ## Relation to the other projects here
