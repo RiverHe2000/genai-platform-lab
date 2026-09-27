@@ -1,6 +1,7 @@
 name: CI · agent-mcp-eval
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ["agent-mcp-eval/**", ".github/workflows/agent-mcp-eval-ci.yml"]
@@ -53,14 +54,10 @@ jobs:
       - name: Test (pytest + coverage)
         run: pytest --cov-report=xml
 
-      - name: Benchmark gate (deterministic, scripted model, every task)
-        # The full task set through both architectures. The scripted model makes this
-        # deterministic, so a change in agent behaviour shows up as a diff in the report
-        # rather than as noise.
-        run: |
-          mcpeval bench run --arch single --model scripted --out runs/ci-single
-          mcpeval bench run --arch supervisor --model scripted --out runs/ci-supervisor
-          mcpeval bench compare runs/ci-single runs/ci-supervisor --margin 0.05
+      - name: Harness regression gate and research comparison
+        # Fail on changed per-task scripted outcomes. HOLD in the separate architecture
+        # comparison is a valid research finding, not a harness regression.
+        run: make gate
 
       - name: MCP protocol smoke test (real stdio transport)
         # Proves the server is a real MCP server, not just a set of Python functions:

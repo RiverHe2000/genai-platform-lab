@@ -22,7 +22,8 @@ mcpeval tasks show reconciliation-01-break-acc-0006   # one task, its gold answe
 
 mcpeval bench run --arch single     --model scripted --out runs/single
 mcpeval bench run --arch supervisor --model scripted --out runs/supervisor
-mcpeval bench compare runs/single runs/supervisor --margin 0.05 --gate
+mcpeval bench compare runs/single runs/supervisor --margin 0.05  # research HOLD is an outcome
+make gate                                   # fails on a changed scripted harness outcome
 ```
 
 ---
@@ -177,18 +178,26 @@ decisions and their trade-offs.
 |---|---|
 | Lint and format | `ruff` (pinned 0.16.6), broad rule set, line length 100 |
 | Types | `mypy --strict` over `src/` **and** `tests/` |
-| Tests | **1 294 tests, 99.4 % branch coverage**, offline, no network, seconds on CPU |
+| Tests | Offline tests with a branch-coverage gate; current counts come from the linked CI run |
 | Determinism | the scripted chat model drives the whole benchmark, so CI measures the harness rather than a model's mood |
-| CI | Python 3.12 and 3.13; the full task set through both architectures; a real stdio MCP handshake |
+| CI | Python 3.12 and 3.13; per-task scripted regression checks on both architectures; a real stdio MCP handshake |
 
 CI needs no PyTorch: the scripted model makes the entire benchmark runnable without a model,
 which keeps the gate a two-minute job. The Hugging Face backend is an optional extra.
 
 ```bash
 make all                      # ruff + mypy + pytest
-make gate                     # the deterministic benchmark gate CI runs
+make gate                     # scripted outcome regression gate + research comparison
 bash scripts/run_experiments.sh --scripted-only
 ```
+
+The [reviewed harness fixtures](gates/README.md) distinguish a grading/orchestration regression
+from an honest **HOLD** in the architecture comparison. A changed scripted outcome fails CI,
+even if it increases the aggregate success score; research non-promotion is recorded normally.
+For a release that must require promotion, use `bench compare --gate` explicitly.
+
+The real-model results above are historical runs with the settings and manifests committed in
+`docs/experiments`. No stronger-model rerun is implied by the current offline regression checks.
 
 ---
 

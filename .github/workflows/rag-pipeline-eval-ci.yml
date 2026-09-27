@@ -1,6 +1,7 @@
 name: CI · rag-pipeline-eval
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ["rag-pipeline-eval/**", ".github/workflows/rag-pipeline-eval-ci.yml"]

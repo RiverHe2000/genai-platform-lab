@@ -1,6 +1,7 @@
 name: CI · langgraph-agent-guardrails
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ["langgraph-agent-guardrails/**", ".github/workflows/langgraph-agent-guardrails-ci.yml"]

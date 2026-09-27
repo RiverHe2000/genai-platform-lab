@@ -1,6 +1,7 @@
 name: CI · llm-gateway-release
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ["llm-gateway-release/**", ".github/workflows/llm-gateway-release-ci.yml"]

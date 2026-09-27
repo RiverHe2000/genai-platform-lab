@@ -12,7 +12,7 @@ against the official `ragas` package with the same judge.
 |---|---|
 | Quality gates | `ruff`, `mypy --strict`, **143 tests** (offline, CPU, ≈ 6 s), **96 % branch coverage** |
 | Corpus / eval set | 20 policy documents (credit, IFRS 9, capital, liquidity, CPS 230, AML, privacy, GenAI governance …) → 35 chunks; 60 questions: 42 single-hop, 5 multi-hop, 12 paraphrased, 6 unanswerable |
-| Headline | Hybrid (bge-small + BM25, RRF) lifts **hit_rate@1 from 0.852 (BM25) to 0.926**; adding the cross-encoder reranker reaches **1.000 on every retrieval metric** at 189 ms/query. End-to-end RAGAS metrics with a local judge, the hybrid-vs-BM25 paired comparison, the production-gate decision and the status of the official-`ragas` cross-check: [docs/RESULTS.md](docs/RESULTS.md) |
+| Headline | On 54 answerable questions over 35 chunks, hybrid retrieval lifts **hit_rate@1 0.852 → 0.926**; reranking reaches **1.000**. The answer-quality release gate remains **HOLD**. These are small fictional-corpus results; the official RAGAS cross-check is still unresolved. [Evidence and limits](docs/RESULTS.md) |
 
 Companion projects: [`langgraph-agent-guardrails`](../langgraph-agent-guardrails) (LangGraph
 agent with rails) and [`llm-gateway-release`](../llm-gateway-release) (serving, vLLM,
@@ -53,16 +53,17 @@ eval-gated promotion). Together: *retrieve, act, ship*.
 |---|---:|---:|---:|---:|---:|
 | BM25 | 0.852 [0.76, 0.94] | 1.000 | 0.911 [0.85, 0.97] | 0.934 | 0.1 |
 | dense, hashing embedder (offline) | 0.759 [0.65, 0.87] | 0.889 | 0.809 | 0.827 | 0.1 |
-| dense, bge-small-en-v1.5 | 0.889 [0.81, 0.96] | 0.981 | 0.932 | 0.945 | 8.7 |
-| hybrid RRF (BM25 + bge) | **0.926** [0.85, 0.98] | 1.000 | 0.963 [0.93, 0.99] | 0.973 | 7.5 |
-| hybrid convex (BM25 + bge) | 0.926 | 1.000 | 0.960 | 0.970 | 7.8 |
-| hybrid RRF + cross-encoder rerank | **1.000** | 1.000 | **1.000** | **1.000** | 189.3 |
+| dense, bge-small-en-v1.5 | 0.889 [0.81, 0.96] | 0.981 | 0.932 | 0.945 | 16.1 |
+| hybrid RRF (BM25 + bge) | **0.926** [0.85, 0.98] | 1.000 | 0.963 [0.93, 0.99] | 0.973 | 15.8 |
+| hybrid convex (BM25 + bge) | 0.926 | 1.000 | 0.960 | 0.970 | 17.3 |
+| hybrid RRF + cross-encoder rerank | **1.000** | 1.000 | **1.000** | **1.000** | 189.5 |
 
 Full tables: [docs/experiments/retrieval_bench_bge.md](docs/experiments/retrieval_bench_bge.md),
 [retrieval_bench_hash.md](docs/experiments/retrieval_bench_hash.md). The `paraphrase` slice
 (questions rephrased to avoid the document's vocabulary) is where BM25 loses and the dense
 retriever wins; fusion keeps the best of both, and the reranker fixes the remaining
-rank-1 misses at ~25× the latency — the classic retrieve-cheap-then-rerank trade.
+rank-1 misses at ~12× the latency. Values above agree with the committed retrieval-benchmark
+artefact and `docs/RESULTS.md`; no new model run is implied by this documentation update.
 
 ### End-to-end (generation + RAGAS metrics)
 
@@ -78,7 +79,24 @@ cross-check against the official `ragas` implementation are in [docs/RESULTS.md]
 
 ```bash
 python -m venv .venv && source .venv/bin/activate        # .venv\Scripts\activate on Windows
-pip install -e ".[dev]"                                   # add [dense] for bge/reranker, [hf] for a local model, [ragas] for the cross-check
+pip install -e "."                                       # lightweight offline demo; no model weights
+
+ragpipe ingest --corpus corpus --index index/demo --embedder hash
+ragpipe query --index index/demo --embedder hash --generator fake --show-contexts \
+  "How quickly must APRA be told about a disruption to a critical operation?"
+ragpipe eval --index index/demo --evalset evalsets/policy_qa.jsonl --out runs/demo \
+  --generator fake --judge fake --metrics retrieval,lexical
+ragpipe gate --report runs/demo/report.json --gates gates/retrieval_smoke.yaml
+```
+
+This demonstrates plumbing and the retrieval gate with a scripted generator. It does not
+measure real answer quality: the default fake generator abstains; `--show-contexts` displays
+the retrieved evidence, and the gate checks retrieval only. For the reported model-backed
+experiment, install the needed extras first; models download on first use and generation is
+considerably slower on CPU:
+
+```bash
+pip install -e ".[dev,dense,hf]"
 
 ragpipe ingest --corpus corpus --index index/bge --embedder sentence-transformers
 ragpipe query --index index/bge --embedder sentence-transformers --rerank --show-contexts \
@@ -90,14 +108,23 @@ ragpipe eval --index index/bge --evalset evalsets/policy_qa.jsonl --out runs/hyb
   --embedder sentence-transformers --retriever hybrid --rerank \
   --generator hf --generator-model Qwen/Qwen2.5-1.5B-Instruct --judge same
 
+# baseline required by the paired comparison
+ragpipe eval --index index/bge --evalset evalsets/policy_qa.jsonl --out runs/bm25 \
+  --embedder sentence-transformers --retriever bm25 \
+  --generator hf --generator-model Qwen/Qwen2.5-1.5B-Instruct --judge same
+
 ragpipe gate --report runs/hybrid/report.json --gates gates/production.yaml      # exit 1 on failure
 ragpipe compare --candidate runs/hybrid/report.json --baseline runs/bm25/report.json
-ragpipe ragas-crosscheck --report runs/hybrid/report.json --embedder sentence-transformers --judge hf --judge-model Qwen/Qwen2.5-1.5B-Instruct
 ragpipe retrieval-bench --corpus corpus --evalset evalsets/policy_qa.jsonl --embedder sentence-transformers --rerank
 
 make all           # ruff + mypy --strict + pytest
 make results       # regenerates docs/experiments (scripts/run_experiments.sh)
 ```
+
+The optional official-library cross-check needs `pip install -e ".[ragas,dense,hf]"`.
+Its historical run failed during model loading; it is **not** a completed validation claim.
+See [the recorded compatibility limitation](docs/RESULTS.md#7-cross-check-against-the-official-ragas-implementation--open)
+before attempting `ragpipe ragas-crosscheck`.
 
 Any OpenAI-compatible server works as generator or judge:
 `--generator openai --generator-base-url http://vllm:8000/v1 --generator-model <served name>`
