@@ -199,6 +199,11 @@ For a release that must require promotion, use `bench compare --gate` explicitly
 The real-model results above are historical runs with the settings and manifests committed in
 `docs/experiments`. No stronger-model rerun is implied by the current offline regression checks.
 
+The [frozen local live protocol](docs/LIVE_PROTOCOL.md) defines a separate 18-task,
+two-model comparison with pinned revisions, repeated real inference, full tool trajectories,
+and checksum receipts. Its preflight and evidence verification are model-free; running it
+requires locally cached weights. Scripted regression outcomes are not model baselines.
+
 ---
 
 ## Relation to the other projects here
